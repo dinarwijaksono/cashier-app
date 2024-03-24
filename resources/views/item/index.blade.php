@@ -39,43 +39,87 @@
                 </a>
             </nav>
         </header>
-        <!-- Left side column. contains the logo and sidebar -->
-        <aside class="main-sidebar">
-            <!-- sidebar: style can be found in sidebar.less -->
-            <section class="sidebar">
 
-                <!-- sidebar menu: : style can be found in sidebar.less -->
-                <ul class="sidebar-menu">
-                    <li class="header">MAIN NAVIGATION</li>
-
-                    <li>
-                        <a href="pages/mailbox/mailbox.html">
-                            <i class="fa fa-envelope"></i> <span>Mailbox</span>
-                        </a>
-                    </li>
-                </ul>
-            </section>
-            <!-- /.sidebar -->
-        </aside>
+        @livewire('components.sidebar')
 
         <!-- Right side column. Contains the navbar and content of the page -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small>Control panel</small>
-                </h1>
+                <h1>Master Item</h1>
                 <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
+                    <li><a href="/master-item" class="active">Master Item</a></li>
                 </ol>
             </section>
 
             <!-- Main content -->
             <section class="content">
 
+                <div style="margin-bottom: 10px;">
+                    <a href="/add-item" class="btn btn-block btn-sm btn-success"><b>Tambah Item</b></a>
+                </div>
 
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h3 class="box-title">List item</h3>
+                    </div>
+
+                    <div class="box-body">
+
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-sm-10">
+                                <div class="form-group ">
+                                    <input type="text" id="name" class="form-control" placeholder="name"
+                                        autocomplete="off" />
+                                </div>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <button class="btn btn-success btn-block">Cari</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <table class="table table-border table-condensed table-striped">
+                            <tr>
+                                <th>No</th>
+                                <th>Code</th>
+                                <th>Nama</th>
+                                <th>Dibuat</th>
+                                <th>Satuan</th>
+                                <th>Harga</th>
+                                <th>Stok</th>
+                                <th colspan="3"></th>
+                            </tr>
+
+                            <tr>
+                                <td>1</td>
+                                <td>I000001</td>
+                                <td>Pulpen</td>
+                                <td>12:23 10 maret 2022</td>
+                                <td>Pcs</td>
+                                <td>Rp 2.455</td>
+                                <td>0</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-success btn-block">Edit</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-success btn-block">Tambah stok</button>
+                                </td>
+
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-danger btn-block">Hapus</button>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                    </div>
+                </div>
 
             </section><!-- /.content -->
         </div><!-- /.content-wrapper -->

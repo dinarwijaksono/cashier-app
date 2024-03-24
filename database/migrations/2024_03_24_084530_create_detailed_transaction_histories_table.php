@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transaction_history_id');
             $table->foreignId('item_id');
-            $table->float('qty');
-            $table->float('price');
-            $table->float('total');
+            $table->float('qty', 12.2);
+            $table->float('price', 12.2);
+            $table->float('total', 12.2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });

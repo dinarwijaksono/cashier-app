@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('item_id');
             $table->string('period', 20);
             $table->boolean('is_closed');
-            $table->float('first_stock');
-            $table->float('adjusment');
-            $table->float('last_stock');
+            $table->float('first_stock', 12.2);
+            $table->float('adjusment', 12.2);
+            $table->float('last_stock', 12.2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('item_stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_id');
-            $table->float('stock');
-            $table->float('adjusment');
+            $table->float('stock', 12.2);
+            $table->float('adjusment', 12.2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });

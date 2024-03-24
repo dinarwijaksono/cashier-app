@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('item_id');
             $table->string('before_name', 100);
             $table->string('before_unit', 10);
-            $table->float('before_price');
+            $table->float('before_price', 12.2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });
