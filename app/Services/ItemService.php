@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Item;
 use App\Models\ItemChangeHistory;
 use App\Models\ItemStock;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -58,6 +59,38 @@ class ItemService
             Log::error('create item failed', [
                 'exeption' => $th->getMessage()
             ]);
+        }
+    }
+
+
+    // read
+    public function getAll(): Collection
+    {
+        try {
+
+            $getItem = DB::table('items')
+                ->join('item_stocks', 'item_stocks.item_id', '=', 'items.id')
+                ->select(
+                    'items.id',
+                    'items.code',
+                    'items.name',
+                    'items.unit',
+                    'items.unit',
+                    'item_stocks.stock',
+                    'item_stocks.adjusment',
+                    'items.created_at',
+                    'items.updated_at'
+                )->get();
+
+            Log::info('get all item success');
+
+            return collect($getItem);
+        } catch (\Throwable $th) {
+            Log::error('get all item failed', [
+                'exeption' => $th->getMessage()
+            ]);
+
+            return collect();
         }
     }
 }

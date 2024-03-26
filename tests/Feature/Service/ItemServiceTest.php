@@ -4,6 +4,7 @@ namespace Tests\Feature\Service;
 
 use App\Models\Item;
 use App\Services\ItemService;
+use Database\Seeders\ItemSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -45,5 +46,24 @@ class ItemServiceTest extends TestCase
             'stock' => 0,
             'adjusment' => 0
         ]);
+    }
+
+
+    public function test_getAll()
+    {
+        $this->seed(ItemSeeder::class);
+        $this->seed(ItemSeeder::class);
+        $this->seed(ItemSeeder::class);
+        $this->seed(ItemSeeder::class);
+        $this->seed(ItemSeeder::class);
+
+        $response = $this->itemService->getALl();
+
+        $this->assertEquals($response->count(), 5);
+
+        $first = $response->first();
+
+        $this->assertObjectHasProperty('name', $first);
+        $this->assertObjectHasProperty('adjusment', $first);
     }
 }
