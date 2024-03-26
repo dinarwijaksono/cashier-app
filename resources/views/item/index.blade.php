@@ -83,7 +83,8 @@
 
                         <hr />
 
-                        <table class="table table-border table-condensed table-striped">
+                        <table class="table table-border table-condensed table-striped"
+                            aria-describedby="table-show-items">
                             <tr>
                                 <th>No</th>
                                 <th>Code</th>

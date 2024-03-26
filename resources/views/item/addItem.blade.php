@@ -62,7 +62,7 @@
 
                 <div class="box box-success">
                     <div class="box-body ">
-                        <table class="table table-border">
+                        <table class="table table-border" aria-describedby="table-show-item">
 
                             <tr>
                                 <th>Tanggal</th>
