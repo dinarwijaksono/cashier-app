@@ -46,6 +46,7 @@ class FormAddItem extends Component
             session()->put('alertMessage', 'Item berhasil ditambahkan.');
 
             $this->dispatch('do-show-box')->to(Alert::class);
+            $this->dispatch('add-item')->to(TableListItem::class);
 
             Log::info('do add item success');
         } catch (\Throwable $th) {

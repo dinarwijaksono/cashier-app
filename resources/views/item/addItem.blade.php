@@ -60,31 +60,7 @@
 
                 @livewire('item.form-add-item')
 
-                <div class="box box-success">
-                    <div class="box-body ">
-                        <table class="table table-border" aria-describedby="table-show-item">
-
-                            <tr>
-                                <th>Tanggal</th>
-                                <th>Code</th>
-                                <th>Nama Item</th>
-                                <th>Satuan</th>
-                                <th>Harga</th>
-                            </tr>
-
-                            @for ($i = 0; $i < 20; $i++)
-                                <tr>
-                                    <td>12 Maret 2023</td>
-                                    <td>I00001</td>
-                                    <td>Pulpen</td>
-                                    <td>pcs</td>
-                                    <td>Rp 3.000</td>
-                                </tr>
-                            @endfor
-
-                        </table>
-                    </div>
-                </div>
+                @livewire('item.table-list-item')
 
             </section><!-- /.content -->
         </div><!-- /.content-wrapper -->

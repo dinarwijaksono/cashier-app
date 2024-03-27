@@ -75,7 +75,7 @@ class ItemService
                     'items.code',
                     'items.name',
                     'items.unit',
-                    'items.unit',
+                    'items.price',
                     'item_stocks.stock',
                     'item_stocks.adjusment',
                     'items.created_at',
