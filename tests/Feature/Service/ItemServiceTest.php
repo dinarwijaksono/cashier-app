@@ -49,6 +49,36 @@ class ItemServiceTest extends TestCase
     }
 
 
+    public function test_getByName()
+    {
+        $this->seed(ItemSeeder::class);
+        $this->seed(ItemSeeder::class);
+        $this->seed(ItemSeeder::class);
+
+        $name = 'example';
+        $unit = 'kg';
+        $price = 1000;
+
+        $this->itemService->create($name, $unit, $price);
+
+        $name = 'example two';
+
+        $this->itemService->create($name, $unit, $price);
+
+        $name = 'this example two';
+
+        $this->itemService->create($name, $unit, $price);
+
+        $response = $this->itemService->getByname('example');
+
+        $this->assertEquals($response->count(), 3);
+
+        $response = $this->itemService->getAll();
+
+        $this->assertEquals($response->count(), 6);
+    }
+
+
     public function test_getAll()
     {
         $this->seed(ItemSeeder::class);

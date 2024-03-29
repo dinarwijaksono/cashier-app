@@ -64,6 +64,38 @@ class ItemService
 
 
     // read
+    public function getByName(string $name): Collection
+    {
+        try {
+
+            $getItem = DB::table('items')
+                ->join('item_stocks', 'item_stocks.item_id', '=', 'items.id')
+                ->select(
+                    'items.id',
+                    'items.code',
+                    'items.name',
+                    'items.unit',
+                    'items.price',
+                    'item_stocks.stock',
+                    'item_stocks.adjusment',
+                    'items.created_at',
+                    'items.updated_at'
+                )
+                ->where('name', 'like', "%$name%")
+                ->get();
+
+            Log::info('get by name item success');
+
+            return collect($getItem);
+        } catch (\Throwable $th) {
+            Log::error('get by name item failed', [
+                'exeption' => $th->getMessage()
+            ]);
+
+            return collect();
+        }
+    }
+
     public function getAll(): Collection
     {
         try {
