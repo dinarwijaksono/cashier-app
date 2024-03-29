@@ -9,6 +9,7 @@ use App\Models\ItemStock;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class ItemService
 {
@@ -65,6 +66,37 @@ class ItemService
 
 
     // read
+    public function getByCode(string $code): object
+    {
+        try {
+            $item = DB::table('items')
+                ->join('item_stocks', 'item_stocks.item_id', '=', 'items.id')
+                ->select(
+                    'items.id',
+                    'items.code',
+                    'items.name',
+                    'items.unit',
+                    'items.price',
+                    'item_stocks.stock',
+                    'item_stocks.adjusment',
+                    'items.created_at',
+                    'items.updated_at'
+                )
+                ->where('code', $code)
+                ->first();
+
+            Log::info('get by code success');
+
+            return $item;
+        } catch (\Throwable $th) {
+            Log::error('get by code failed', [
+                'message' => $th->getMessage()
+            ]);
+
+            return new stdClass();
+        }
+    }
+
     public function getByName(string $name): Collection
     {
         try {
