@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Service;
 
+use App\Domain\ItemDomain;
 use App\Models\Item;
 use App\Services\ItemService;
 use Database\Seeders\ItemSeeder;
@@ -95,5 +96,33 @@ class ItemServiceTest extends TestCase
 
         $this->assertObjectHasProperty('name', $first);
         $this->assertObjectHasProperty('adjusment', $first);
+    }
+
+
+    public function test_updateByCode()
+    {
+        $this->seed(ItemSeeder::class);
+
+        $item = Item::select('*')->first();
+
+        $itemDomain = new ItemDomain();
+        $itemDomain->code = $item->code;
+        $itemDomain->name = 'example';
+        $itemDomain->price = 1000;
+        $itemDomain->unit = 'pcs';
+
+        $this->itemService->updateByCode($itemDomain);
+
+        $this->assertDatabaseHas('items', [
+            'name' => $itemDomain->name,
+            'unit' => $itemDomain->unit,
+            'price' => $itemDomain->price,
+        ]);
+
+        $this->assertDatabaseHas('item_change_histories', [
+            'before_name' => $itemDomain->name,
+            'before_unit' => $itemDomain->unit,
+            'before_price' => $itemDomain->price,
+        ]);
     }
 }

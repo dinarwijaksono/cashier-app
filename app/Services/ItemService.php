@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Domain\ItemDomain;
 use App\Models\Item;
 use App\Models\ItemChangeHistory;
 use App\Models\ItemStock;
@@ -123,6 +124,39 @@ class ItemService
             ]);
 
             return collect();
+        }
+    }
+
+
+    // update
+    public function updateByCode(ItemDomain $itemDomain): void
+    {
+        try {
+
+            Item::where('code', $itemDomain->code)
+                ->update([
+                    'name' => $itemDomain->name,
+                    'unit' => $itemDomain->unit,
+                    'price' => $itemDomain->price,
+                    'updated_at' => round(microtime(true) * 1000)
+                ]);
+
+            $item = Item::select('id')->where('code', $itemDomain->code)->first();
+
+            $itemChangeHistory = new ItemChangeHistory();
+            $itemChangeHistory->item_id = $item->id;
+            $itemChangeHistory->before_name = $itemDomain->name;
+            $itemChangeHistory->before_unit = $itemDomain->unit;
+            $itemChangeHistory->before_price = $itemDomain->price;
+            $itemChangeHistory->created_at = round(microtime(true) * 1000);
+            $itemChangeHistory->updated_at = round(microtime(true) * 1000);
+            $itemChangeHistory->save();
+
+            Log::info('update by code success');
+        } catch (\Throwable $th) {
+            Log::error('update by code failed', [
+                'message' => $th->getMessage()
+            ]);
         }
     }
 }
