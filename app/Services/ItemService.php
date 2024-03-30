@@ -159,6 +159,33 @@ class ItemService
         }
     }
 
+    public function getItemChangeHistoryByItemId(int $itemId): Collection
+    {
+        try {
+
+            $itemChangeHistory = ItemChangeHistory::select(
+                'before_name',
+                'before_unit',
+                'before_price',
+                'created_at',
+                'updated_at'
+            )
+                ->where('item_id', $itemId)
+                ->get();
+
+            Log::info('get item change histori by item id success');
+
+            return collect($itemChangeHistory);
+        } catch (\Throwable $th) {
+
+            Log::error('get item change histori by item id failed', [
+                'message' => $th->getMessage()
+            ]);
+
+            return collect();
+        }
+    }
+
 
     // update
     public function updateByCode(ItemDomain $itemDomain): void

@@ -127,6 +127,30 @@ class ItemServiceTest extends TestCase
     }
 
 
+    public function test_getItemChangeHistory()
+    {
+        $this->seed(ItemSeeder::class);
+
+        $item = Item::select('*')->first();
+
+        $itemDomain = new ItemDomain();
+        $itemDomain->code = $item->code;
+        $itemDomain->name = 'example';
+        $itemDomain->price = 1000;
+        $itemDomain->unit = 'pcs';
+
+        $this->itemService->updateByCode($itemDomain);
+
+        $response = $this->itemService->getItemChangeHistoryByItemId($item->id);
+        $first = collect($response->first())->toArray();
+
+        $this->assertArrayHasKey('before_name', $first);
+        $this->assertArrayHasKey('before_unit', $first);
+        $this->assertArrayHasKey('before_price', $first);
+        $this->assertArrayHasKey('created_at', $first);
+    }
+
+
     public function test_updateByCode()
     {
         $this->seed(ItemSeeder::class);
