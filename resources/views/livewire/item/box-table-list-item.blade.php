@@ -98,7 +98,7 @@
                     <td class="text-right">{{ 'Rp ' . number_format($key->price) }}</td>
                     <td class="text-center">{{ number_format($key->stock) }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-success btn-block">Edit</button>
+                        <a href="/edit-item/{{ $key->code }}" class="btn btn-sm btn-success btn-block">Edit</a>
                     </td>
                     <td>
                         <button type="button" class="btn btn-sm btn-success btn-block">Tambah stok</button>

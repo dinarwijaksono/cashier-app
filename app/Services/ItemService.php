@@ -68,6 +68,8 @@ class ItemService
     // read
     public function getByCode(string $code): object
     {
+        self::boot();
+
         try {
             $item = DB::table('items')
                 ->join('item_stocks', 'item_stocks.item_id', '=', 'items.id')
@@ -99,6 +101,8 @@ class ItemService
 
     public function getByName(string $name): Collection
     {
+        self::boot();
+
         try {
 
             $getItem = DB::table('items')
@@ -131,6 +135,8 @@ class ItemService
 
     public function getAll(): Collection
     {
+        self::boot();
+
         try {
 
             $getItem = DB::table('items')
@@ -161,6 +167,8 @@ class ItemService
 
     public function getItemChangeHistoryByItemId(int $itemId): Collection
     {
+        self::boot();
+
         try {
 
             $itemChangeHistory = ItemChangeHistory::select(
@@ -171,6 +179,7 @@ class ItemService
                 'updated_at'
             )
                 ->where('item_id', $itemId)
+                ->orderByDesc('created_at')
                 ->get();
 
             Log::info('get item change histori by item id success');
@@ -190,6 +199,8 @@ class ItemService
     // update
     public function updateByCode(ItemDomain $itemDomain): void
     {
+        self::boot();
+
         try {
 
             Item::where('code', $itemDomain->code)

@@ -30,4 +30,16 @@ class ItemController extends Controller
 
         return view('item.addItem');
     }
+
+
+    public function editItem(string $code)
+    {
+        self::boot();
+
+        $data['code'] = $code;
+
+        Log::info('get /edit-item success');
+
+        return view('item.edit-item', $data);
+    }
 }
