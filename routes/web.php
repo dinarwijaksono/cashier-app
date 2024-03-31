@@ -15,4 +15,6 @@ Route::get('/master-item', [ItemController::class, 'index']);
 Route::get('/add-item', [ItemController::class, 'addItem']);
 
 Route::get("/edit-item/{code}", [ItemController::class, 'editItem']);
+
+Route::get('/add-stock/{code}', [ItemController::class, 'addStock']);
 // end ItemController

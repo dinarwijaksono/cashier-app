@@ -101,7 +101,8 @@
                         <a href="/edit-item/{{ $key->code }}" class="btn btn-sm btn-success btn-block">Edit</a>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-success btn-block">Tambah stok</button>
+                        <a href="/add-stock/{{ $key->code }}" class="btn btn-sm btn-success btn-block">Tambah
+                            stok</a>
                     </td>
 
                     <td>
