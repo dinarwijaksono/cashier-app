@@ -35,11 +35,6 @@ class ItemServiceTest extends TestCase
             'price' => $price
         ]);
 
-        $this->assertDatabaseHas('item_change_histories', [
-            'before_name' => $name,
-            'before_unit' => $unit,
-        ]);
-
         $item = Item::select('id')->where('name', $name)->first();
 
         $this->assertDatabaseHas('item_stocks', [

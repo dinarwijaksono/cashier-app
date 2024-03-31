@@ -25,6 +25,8 @@ class ItemService
 
         try {
 
+            DB::beginTransaction();
+
             $itemId = DB::table('items')->insertGetId([
                 'code' => '0',
                 'name' => $name,
@@ -38,15 +40,6 @@ class ItemService
                 'code' =>  'I' . str_pad($itemId, 7, '0', STR_PAD_LEFT),
             ]);
 
-            $itemChangeHistory = new ItemChangeHistory();
-            $itemChangeHistory->item_id = $itemId;
-            $itemChangeHistory->before_name = $name;
-            $itemChangeHistory->before_unit = $unit;
-            $itemChangeHistory->before_price = $price;
-            $itemChangeHistory->created_at = round(microtime(true) * 1000);
-            $itemChangeHistory->updated_at = round(microtime(true) * 1000);
-            $itemChangeHistory->save();
-
             $itemStock = new ItemStock();
             $itemStock->item_id = $itemId;
             $itemStock->stock = 0;
@@ -56,7 +49,11 @@ class ItemService
             $itemStock->save();
 
             Log::info('create item success');
+
+            DB::commit();
         } catch (\Throwable $th) {
+
+            DB::rollBack();
 
             Log::error('create item failed', [
                 'exeption' => $th->getMessage()
@@ -211,13 +208,17 @@ class ItemService
                     'updated_at' => round(microtime(true) * 1000)
                 ]);
 
-            $item = Item::select('id')->where('code', $itemDomain->code)->first();
+            $item = Item::select('id', 'name', 'unit', 'price')
+                ->where('code', $itemDomain->code)->first();
 
             $itemChangeHistory = new ItemChangeHistory();
             $itemChangeHistory->item_id = $item->id;
-            $itemChangeHistory->before_name = $itemDomain->name;
-            $itemChangeHistory->before_unit = $itemDomain->unit;
-            $itemChangeHistory->before_price = $itemDomain->price;
+            $itemChangeHistory->before_name = $item->name;
+            $itemChangeHistory->before_unit = $item->unit;
+            $itemChangeHistory->before_price = $item->price;
+            $itemChangeHistory->after_name = $itemDomain->name;
+            $itemChangeHistory->after_unit = $itemDomain->unit;
+            $itemChangeHistory->after_price = $itemDomain->price;
             $itemChangeHistory->created_at = round(microtime(true) * 1000);
             $itemChangeHistory->updated_at = round(microtime(true) * 1000);
             $itemChangeHistory->save();

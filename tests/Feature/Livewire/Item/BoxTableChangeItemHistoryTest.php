@@ -19,9 +19,6 @@ class BoxTableChangeItemHistoryTest extends TestCase
         $item = Item::select('*')->first();
 
         Livewire::test(BoxTableChangeItemHistory::class, ['code' => $item->code])
-            ->assertStatus(200)
-            ->assertSee($item->name)
-            ->assertSee($item->unit)
-            ->assertSee('Rp ' . number_format($item->price));
+            ->assertStatus(200);
     }
 }

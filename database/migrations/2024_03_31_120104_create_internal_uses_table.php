@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaction_histories', function (Blueprint $table) {
+        Schema::create('internal_uses', function (Blueprint $table) {
             $table->id();
-            $table->string('period');
+            $table->foreignId('item_id');
             $table->bigInteger('date');
-            $table->string('type', 20);
-            $table->float('grand_total', 12.2);
+            $table->float('qty', 12.2);
+            $table->string('information', 50);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaction_histories');
+        Schema::dropIfExists('internal_uses');
     }
 };

@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_change_histories', function (Blueprint $table) {
+        Schema::create('item_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_id');
-            $table->string('before_name', 100)->nullable();
-            $table->string('before_unit', 10)->nullable();
-            $table->float('before_price', 12.2)->nullable();
-            $table->string('after_name', 100);
-            $table->string('after_unit', 10);
-            $table->float('after_price', 12.2);
+            $table->bigInteger('period_by_date');
+            $table->bigInteger('date');
+            $table->string('type', 20);
+            $table->float('qty_in', 12.2);
+            $table->float('qty_out', 12.2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_change_histories');
+        Schema::dropIfExists('item_transactions');
     }
 };
