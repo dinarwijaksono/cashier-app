@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('item_id');
             $table->string('before_name', 100)->nullable();
             $table->string('before_unit', 10)->nullable();
-            $table->float('before_price', 12.2)->nullable();
+            $table->decimal('before_price', 14, 2)->nullable();
             $table->string('after_name', 100);
             $table->string('after_unit', 10);
-            $table->float('after_price', 12.2);
+            $table->decimal('after_price', 14, 2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });

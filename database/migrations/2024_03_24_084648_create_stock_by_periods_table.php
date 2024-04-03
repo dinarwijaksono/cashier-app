@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('period', 20);
             $table->bigInteger('period_by_date');
             $table->boolean('is_closed');
-            $table->float('first_stock', 12.2);
-            $table->float('adjusment', 12.2);
-            $table->float('last_stock', 12.2);
+            $table->decimal('first_stock', 14, 2);
+            $table->decimal('adjusment', 14, 2);
+            $table->decimal('last_stock', 14, 2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->bigInteger('period_by_date');
             $table->bigInteger('date');
             $table->string('type', 20);
-            $table->float('qty_in', 12.2);
-            $table->float('qty_out', 12.2);
+            $table->decimal('qty_in', 14, 2);
+            $table->decimal('qty_out', 14, 2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });

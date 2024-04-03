@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('item_id');
             $table->bigInteger('date');
-            $table->float('qty', 12.2);
+            $table->decimal('qty', 12, 2);
             $table->string('information', 50);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');

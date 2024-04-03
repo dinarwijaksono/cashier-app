@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('code', 8)->unique();
             $table->string('name', 100);
             $table->string('unit', 10);
-            $table->float('price', 12.2);
+            $table->decimal('price', 14, 2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });

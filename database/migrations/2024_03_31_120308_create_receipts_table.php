@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('period_by_date');
             $table->bigInteger('date');
-            $table->float('grand_total');
+            $table->decimal('grand_total', 12, 2);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });
