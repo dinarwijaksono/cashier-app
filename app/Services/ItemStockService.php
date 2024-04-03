@@ -116,6 +116,7 @@ class ItemStockService
                 ->select(
                     'items.name',
                     'items.code',
+                    'items.unit',
                     'stock_by_periods.period',
                     'stock_by_periods.period_by_date',
                     'stock_by_periods.is_closed',
@@ -126,6 +127,7 @@ class ItemStockService
                     'stock_by_periods.updated_at'
                 )->where('stock_by_periods.item_id', $item->id)
                 ->where('stock_by_periods.is_closed', false)
+                ->orderBy('stock_by_periods.period_by_date')
                 ->first();
 
             Log::info('get item stock by code success');

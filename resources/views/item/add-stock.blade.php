@@ -23,7 +23,9 @@
                     @livewire('item.box-add-stock', ['code' => $code])
                 </div>
 
-                @livewire('item.box-stock-item', ['code' => $code])
+                <div class="col-sm-6">
+                    @livewire('item.box-stock-item', ['code' => $code])
+                </div>
 
             </div>
 

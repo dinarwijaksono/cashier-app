@@ -3,6 +3,8 @@
 namespace Tests\Feature\Livewire\Item;
 
 use App\Livewire\Item\BoxStockItem;
+use App\Models\Item;
+use Database\Seeders\ItemSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Livewire\Livewire;
@@ -10,10 +12,15 @@ use Tests\TestCase;
 
 class BoxStockItemTest extends TestCase
 {
-    /** @test */
-    public function renders_successfully()
+    public function test_renders_successfully()
     {
-        Livewire::test(BoxStockItem::class)
-            ->assertStatus(200);
+        $this->seed(ItemSeeder::class);
+
+        $item = Item::select('*')->first();
+
+        Livewire::test(BoxStockItem::class, ['code' => $item->code])
+            ->assertStatus(200)
+            ->assertSee($item->name)
+            ->assertSee($item->unit);
     }
 }
