@@ -6,6 +6,7 @@ use App\Domain\ItemDomain;
 use App\Models\Item;
 use App\Models\ItemChangeHistory;
 use App\Models\ItemStock;
+use App\Models\StockByPeriod;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -47,6 +48,21 @@ class ItemService
             $itemStock->created_at = round(microtime(true) * 1000);
             $itemStock->updated_at = round(microtime(true) * 1000);
             $itemStock->save();
+
+            $month = date('n', time());
+            $year = date('Y', time());
+
+            $stockByPeriod = new StockByPeriod();
+            $stockByPeriod->item_id = $itemId;
+            $stockByPeriod->period = date('F-Y', time());
+            $stockByPeriod->period_by_date = mktime(0, 0, 0, $month, 1, $year) * 1000;
+            $stockByPeriod->is_closed = 0;
+            $stockByPeriod->first_stock = 0;
+            $stockByPeriod->adjusment = 0;
+            $stockByPeriod->last_stock = 0;
+            $stockByPeriod->created_at = round(microtime(true) * 1000);
+            $stockByPeriod->updated_at = round(microtime(true) * 1000);
+            $stockByPeriod->save();
 
             Log::info('create item success');
 

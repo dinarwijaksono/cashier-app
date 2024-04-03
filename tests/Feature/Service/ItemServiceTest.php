@@ -42,6 +42,15 @@ class ItemServiceTest extends TestCase
             'stock' => 0,
             'adjusment' => 0
         ]);
+
+        $this->assertDatabaseHas('stock_by_periods', [
+            'item_id' => $item->id,
+            'period' => date('F-Y', time()),
+            'is_closed' => 0,
+            'first_stock' => 0,
+            'adjusment' => 0,
+            'last_stock' => 0,
+        ]);
     }
 
 
