@@ -50,9 +50,9 @@ class BoxAddStock extends Component
             $this->date = date('Y-m-y');
             $this->qty = 0;
 
-            session()->put('alertMessage', "Stock berhasil di tambahkan.");
+            session()->flash('alertMessage', "Stock berhasil di tambahkan.");
 
-            $this->dispatch('do-show-box')->to(Alert::class);
+            return redirect("/add-stock/$this->code");
 
             Log::info('do add stock success');
         } catch (\Throwable $th) {

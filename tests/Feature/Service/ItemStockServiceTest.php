@@ -100,11 +100,29 @@ class ItemStockServiceTest extends TestCase
 
         $response = $this->itemStockService->getItemStockByCode($item->code);
 
-        var_dump($response);
-
         $this->assertEquals($response->name, $item->name);
         $this->assertEquals($response->first_stock, 0);
         $this->assertEquals($response->adjusment, 0);
         $this->assertEquals($response->last_stock, 0);
+    }
+
+
+    public function test_get_item_stock_by_code()
+    {
+        $this->seed(ItemSeeder::class);
+        $item = Item::select('*')->first();
+
+        $date = mktime(1, 2, 3, 1, 12, 2000);
+        $date = $date * 1000;
+
+        $this->itemStockService->addition($item->id, $date, 10);
+
+        $this->assertDatabaseHas('item_transactions', [
+            'item_id' => $item->id,
+            'date' => $date,
+            'type' => 'add_stock',
+            'qty_in' => 10,
+            'qty_out' => 0,
+        ]);
     }
 }

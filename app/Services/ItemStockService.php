@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\ItemStock;
 use App\Models\ItemTransaction;
 use App\Models\StockByPeriod;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use stdClass;
@@ -137,6 +138,36 @@ class ItemStockService
             Log::error('get item stock by code failed', [
                 'message' => $th->getMessage()
             ]);
+        }
+    }
+
+
+    public function getItemTransactions(string $code): Collection
+    {
+        try {
+            $item = Item::select("id")->where('code', $code)->first();
+
+            $itemTransactions = ItemTransaction::select(
+                'item_id',
+                'period_by_date',
+                'date',
+                'type',
+                'qty_in',
+                'qty_out',
+                'created_at',
+                'updated_at',
+            )->where('item_id', $item->id)
+                ->get();
+
+            Log::info('get item transactions success');
+
+            return $itemTransactions;
+        } catch (\Throwable $th) {
+            Log::error('get item transactions failed', [
+                'message' => $th->getMessage()
+            ]);
+
+            return collect([]);
         }
     }
 }

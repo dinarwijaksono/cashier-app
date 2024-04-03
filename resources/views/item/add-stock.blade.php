@@ -15,7 +15,18 @@
         <!-- Main content -->
         <section class="content">
 
-            @livewire('components.alert')
+            @if (session()->has('alertMessage'))
+                <div class="alert alert-warning">
+                    <div class="row">
+                        <div class="col-sm-11">
+                            @if (session()->has('alertMessage'))
+                                <h4>{{ session()->get('alertMessage') }}</h4>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @enderror
+
 
             <div class="row">
 
@@ -29,34 +40,8 @@
 
             </div>
 
-            <div class="box box-success">
-                <div class="box-header">
-                    <h3 class="box-title">History penambahan stock</h3>
-                </div>
+            @livewire('item.box-table-history-transactions', ['code' => $code])
 
-                <div class="box-body">
-
-                    <table class="table table-border" aria-describedby="table-list-item">
-                        <tr>
-                            <th class="text-center">Tanggal</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-center"></th>
-                        </tr>
-
-                        <tr>
-                            <td class="text-center">23:31 - 12 Maret 2024</td>
-                            <td class="text-center">10</td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-danger btn-block">Batalkan</button>
-                            </td>
-                        </tr>
-
-                    </table>
-
-                </div>
-            </div>
-
-
-        </section><!-- /.content -->
-    </div><!-- /.content-wrapper -->
+    </section><!-- /.content -->
+</div><!-- /.content-wrapper -->
 @endsection

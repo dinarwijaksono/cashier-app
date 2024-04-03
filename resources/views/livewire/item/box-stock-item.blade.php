@@ -15,9 +15,9 @@
             </tr>
 
             <tr>
-                <td class="text-center">{{ $item->first_stock }}</td>
-                <td class="text-center">{{ $item->adjusment }}</td>
-                <td class="text-center">{{ $item->last_stock }}</td>
+                <td class="text-center">{{ number_format($item->first_stock, 2) }}</td>
+                <td class="text-center">{{ number_format($item->adjusment, 2) }}</td>
+                <td class="text-center">{{ number_format($item->last_stock, 2) }}</td>
             </tr>
 
         </table>
