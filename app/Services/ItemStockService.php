@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\ItemStock;
 use App\Models\ItemTransaction;
 use App\Models\StockByPeriod;
+use App\Repository\StockByPeriodRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +14,13 @@ use stdClass;
 
 class ItemStockService
 {
+    public $stockByPeriodRepository;
+
+    public function __construct(StockByPeriodRepository $stockByPeriodRepository)
+    {
+        $this->stockByPeriodRepository = $stockByPeriodRepository;
+    }
+
     public function boot()
     {
         Log::withContext(['class' => ItemStockService::class]);
@@ -42,42 +50,7 @@ class ItemStockService
             $period = mktime(0, 0, 0, $month, 1, $year);
             $period = $period * 1000;
 
-            $stockByPeriod = StockByPeriod::select('item_id')
-                ->where('item_id', $itemId)
-                ->where('period_by_date', $period)
-                ->orderByDesc('period_by_date')
-                ->get();
-
-            $stockByPeriod = collect($stockByPeriod);
-
-            if ($stockByPeriod->isEmpty()) {
-
-                StockByPeriod::insert([
-                    'item_id' => $itemId,
-                    'period' => date('F-Y', $date / 1000),
-                    'period_by_date' => $period,
-                    'is_closed' => 0,
-                    'first_stock' => 0,
-                    'adjusment' => 0,
-                    'last_stock' => $value,
-                    'created_at' => round(microtime(true) * 1000),
-                    'updated_at' => round(microtime(true) * 1000),
-                ]);
-            } else {
-
-                $stockByPeriod = StockByPeriod::select('item_id', 'period_by_date', 'is_closed', 'last_stock')
-                    ->where('item_id', $itemId)
-                    ->where('period_by_date', $period)
-                    ->orderByDesc('period_by_date')
-                    ->first();
-
-                StockByPeriod::where('item_id', $itemId)
-                    ->where('period_by_date', $period)
-                    ->update([
-                        'last_stock' => $stockByPeriod->last_stock + $value,
-                        'updated_at' => round(microtime(true) * 1000),
-                    ]);
-            }
+            $this->stockByPeriodRepository->addStock($itemId, $date, $value);
 
             ItemTransaction::insert([
                 'item_id' => $itemId,
