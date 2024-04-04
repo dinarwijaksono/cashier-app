@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\ItemStock;
 use App\Models\ItemTransaction;
 use App\Models\StockByPeriod;
+use App\Repository\ItemTransactionRepository;
 use App\Repository\StockByPeriodRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -15,10 +16,14 @@ use stdClass;
 class ItemStockService
 {
     public $stockByPeriodRepository;
+    public $itemTransactionRepository;
 
-    public function __construct(StockByPeriodRepository $stockByPeriodRepository)
-    {
+    public function __construct(
+        StockByPeriodRepository $stockByPeriodRepository,
+        ItemTransactionRepository $itemTransactionRepository
+    ) {
         $this->stockByPeriodRepository = $stockByPeriodRepository;
+        $this->itemTransactionRepository = $itemTransactionRepository;
     }
 
     public function boot()
@@ -45,23 +50,9 @@ class ItemStockService
                     'updated_at' => round(microtime(true) * 1000)
                 ]);
 
-            $month = date('n', $date / 1000);
-            $year = date('Y', $date / 1000);
-            $period = mktime(0, 0, 0, $month, 1, $year);
-            $period = $period * 1000;
-
             $this->stockByPeriodRepository->addStock($itemId, $date, $value);
 
-            ItemTransaction::insert([
-                'item_id' => $itemId,
-                'period_by_date' => $period,
-                'date' => $date,
-                'type' => 'add_stock',
-                'qty_in' => $value,
-                'qty_out' => 0,
-                'created_at' => round(microtime(true) * 1000),
-                'updated_at' => round(microtime(true) * 1000),
-            ]);
+            $this->itemTransactionRepository->create($itemId, $date, 'add_stock', $value);
 
             Log::info('addtion success');
 
