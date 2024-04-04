@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\ItemStock;
 use App\Models\ItemTransaction;
 use App\Models\StockByPeriod;
+use App\Repository\ItemStockRepository;
 use App\Repository\ItemTransactionRepository;
 use App\Repository\StockByPeriodRepository;
 use Illuminate\Support\Collection;
@@ -17,13 +18,16 @@ class ItemStockService
 {
     public $stockByPeriodRepository;
     public $itemTransactionRepository;
+    public $itemStockRepository;
 
     public function __construct(
         StockByPeriodRepository $stockByPeriodRepository,
-        ItemTransactionRepository $itemTransactionRepository
+        ItemTransactionRepository $itemTransactionRepository,
+        ItemStockRepository $itemStockRepository,
     ) {
         $this->stockByPeriodRepository = $stockByPeriodRepository;
         $this->itemTransactionRepository = $itemTransactionRepository;
+        $this->itemStockRepository = $itemStockRepository;
     }
 
     public function boot()
@@ -40,15 +44,7 @@ class ItemStockService
 
             DB::beginTransaction();
 
-            $item = ItemStock::select('id', 'item_id', 'stock')
-                ->where('item_id', $itemId)
-                ->first();
-
-            ItemStock::where('item_id', $itemId)
-                ->update([
-                    'stock' => $item->stock + $value,
-                    'updated_at' => round(microtime(true) * 1000)
-                ]);
+            $this->itemStockRepository->addStock($itemId, $value);
 
             $this->stockByPeriodRepository->addStock($itemId, $date, $value);
 

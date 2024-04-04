@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repository\ItemStockRepository;
 use App\Repository\ItemTransactionRepository;
 use App\Repository\StockByPeriodRepository;
 use Illuminate\Support\ServiceProvider;
@@ -19,6 +20,10 @@ class RepositoryServiceProvider extends ServiceProvider
 
         $this->app->singleton(ItemTransactionRepository::class, function ($app) {
             return new ItemTransactionRepository($app);
+        });
+
+        $this->app->singleton(ItemStockRepository::class, function ($app) {
+            return new ItemStockRepository($app);
         });
     }
 
