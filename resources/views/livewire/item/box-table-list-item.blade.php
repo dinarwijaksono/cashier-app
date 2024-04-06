@@ -109,7 +109,8 @@
                         @if ($transactions->where('item_id', $key->id)->isNotEmpty())
                             <button class="btn disabled btn-sm btn-danger btn-block">Hapus</button>
                         @else
-                            <button type="button" class="btn btn-sm btn-danger btn-block">Hapus</button>
+                            <button type="button" wire:click="doDeleteItem({{ $key->id }})" type="button"
+                                class="btn btn-sm btn-danger btn-block">Hapus</button>
                         @endif
                     </td>
                 </tr>

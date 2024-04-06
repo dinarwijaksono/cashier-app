@@ -173,4 +173,36 @@ class ItemStockService
             DB::rollBack();
         }
     }
+
+
+    public function deleteItem(int $itemId): void
+    {
+        try {
+            self::boot();
+
+            DB::beginTransaction();
+
+            $item = ItemTransaction::select('item_id')->where('item_id', $itemId)->get();
+            if ($item->isNotEmpty()) {
+                Log::error('delete item failed', [
+                    'message' => 'the item still exists in the transaction table'
+                ]);
+            } else {
+
+                $this->stockByPeriodRepository->deleteItem($itemId);
+                $this->itemStockRepository->deleteItem($itemId);
+
+                Item::where('id', $itemId)->delete();
+
+                Log::info('delete item success');
+                DB::commit();
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            Log::error('delete item failed', [
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
 }

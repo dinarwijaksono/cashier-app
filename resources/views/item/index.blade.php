@@ -55,6 +55,8 @@
             <!-- Main content -->
             <section class="content">
 
+                @livewire('components.alert')
+
                 <div style="margin-bottom: 10px;">
                     <a href="/add-item" class="btn btn-block btn-sm btn-success"><b>Tambah Item</b></a>
                 </div>

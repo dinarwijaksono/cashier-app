@@ -5,6 +5,7 @@ namespace Tests\Feature\Service;
 use App\Models\Item;
 use App\Models\ItemTransaction;
 use App\Services\ItemStockService;
+use Database\Seeders\AddStockSeeder;
 use Database\Seeders\ItemSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -14,12 +15,17 @@ use Tests\TestCase;
 class ItemStockServiceTest extends TestCase
 {
     public $itemStockService;
+    public $item;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->itemStockService = App::make(ItemStockService::class);
+
+        $this->seed(ItemSeeder::class);
+
+        $this->item = Item::select('*')->first();
     }
 
 
@@ -176,5 +182,34 @@ class ItemStockServiceTest extends TestCase
             'qty_in' => 13,
             'qty_out' => 0,
         ]);
+    }
+
+
+    public function test_delete_success()
+    {
+        $this->assertDatabaseHas('items', ['id' => $this->item->id]);
+        $this->assertDatabaseHas('item_stocks', ['item_id' => $this->item->id]);
+        $this->assertDatabaseHas('stock_by_periods', ['item_id' => $this->item->id]);
+
+        $this->itemStockService->deleteItem($this->item->id);
+
+        $this->assertDatabaseMissing('items', ['id' => $this->item->id]);
+        $this->assertDatabaseMissing('item_stocks', ['item_id' => $this->item->id]);
+        $this->assertDatabaseMissing('stock_by_periods', ['item_id' => $this->item->id]);
+    }
+
+    public function test_delete_failed_item_exist_in_transaction()
+    {
+        $this->seed(AddStockSeeder::class);
+
+        $this->assertDatabaseHas('items', ['id' => $this->item->id]);
+        $this->assertDatabaseHas('item_stocks', ['item_id' => $this->item->id]);
+        $this->assertDatabaseHas('stock_by_periods', ['item_id' => $this->item->id]);
+
+        $this->itemStockService->deleteItem($this->item->id);
+
+        $this->assertDatabaseHas('items', ['id' => $this->item->id]);
+        $this->assertDatabaseHas('item_stocks', ['item_id' => $this->item->id]);
+        $this->assertDatabaseHas('stock_by_periods', ['item_id' => $this->item->id]);
     }
 }

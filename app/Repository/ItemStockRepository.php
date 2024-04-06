@@ -12,6 +12,7 @@ class ItemStockRepository
         Log::withContext(['class' => ItemStockRepository::class]);
     }
 
+    // create
     public function addStock(int $itemId, int $value): void
     {
         try {
@@ -30,6 +31,23 @@ class ItemStockRepository
             Log::info('add stock success');
         } catch (\Throwable $th) {
             Log::error('add stock failed', [
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+
+    // delete
+    public function deleteItem(int $itemId): void
+    {
+        try {
+            self::boot();
+
+            ItemStock::where('item_id', $itemId)->delete();
+
+            Log::info('delete item success');
+        } catch (\Throwable $th) {
+            Log::error('delete item failed', [
                 'message' => $th->getMessage()
             ]);
         }

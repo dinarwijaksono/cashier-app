@@ -13,12 +13,16 @@ use Tests\TestCase;
 class ItemStockRepositoryTest extends TestCase
 {
     public $itemStockRepository;
+    public $item;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->itemStockRepository = App::make(ItemStockRepository::class);
+
+        $this->seed(ItemSeeder::class);
+        $this->item = Item::select('*')->first();
     }
 
     public function test_add_stock(): void
@@ -33,6 +37,19 @@ class ItemStockRepositoryTest extends TestCase
         $this->assertDatabaseHas('item_stocks', [
             'item_id' => $item->id,
             'stock' => 34
+        ]);
+    }
+
+    public function test_delete_item_success()
+    {
+        $this->assertDatabaseHas('item_stocks', [
+            'item_id' => $this->item->id
+        ]);
+
+        $this->itemStockRepository->deleteItem($this->item->id);
+
+        $this->assertDatabaseMissing('item_stocks', [
+            'item_id' => $this->item->id
         ]);
     }
 }

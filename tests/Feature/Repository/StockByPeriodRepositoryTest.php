@@ -77,4 +77,21 @@ class StockByPeriodRepositoryTest extends TestCase
             'last_stock' => 5
         ]);
     }
+
+
+    public function test_delete_item_success()
+    {
+        $this->assertDatabaseHas('stock_by_periods', [
+            'item_id' => $this->item->id,
+            'first_stock' => 0,
+            'adjusment' => 0,
+            'last_stock' => 0
+        ]);
+
+        $this->stockByPeriodRepository->deleteItem($this->item->id);
+
+        $this->assertDatabaseMissing('stock_by_periods', [
+            'item_id' => $this->item->id,
+        ]);
+    }
 }
