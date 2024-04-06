@@ -106,7 +106,11 @@
                     </td>
 
                     <td>
-                        <button type="button" class="btn btn-sm btn-danger btn-block">Hapus</button>
+                        @if ($transactions->where('item_id', $key->id)->isNotEmpty())
+                            <button class="btn disabled btn-sm btn-danger btn-block">Hapus</button>
+                        @else
+                            <button type="button" class="btn btn-sm btn-danger btn-block">Hapus</button>
+                        @endif
                     </td>
                 </tr>
             @endforeach

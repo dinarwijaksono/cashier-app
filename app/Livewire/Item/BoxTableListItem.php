@@ -3,6 +3,7 @@
 namespace App\Livewire\Item;
 
 use App\Services\ItemService;
+use App\Services\ItemTransactionService;
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
 
@@ -11,10 +12,12 @@ class BoxTableListItem extends Component
     public $items;
     public $sortBy;
     public $sortIsDesc;
+    public $transactions;
 
     public $name;
 
     protected $itemService;
+    protected $itemTransactionService;
 
     public function getRules()
     {
@@ -26,6 +29,7 @@ class BoxTableListItem extends Component
     public function boot()
     {
         $this->itemService = App::make(ItemService::class);
+        $this->itemTransactionService = App::make(ItemTransactionService::class);
     }
 
     public function mount()
@@ -34,6 +38,7 @@ class BoxTableListItem extends Component
         $this->sortIsDesc = false;
 
         $this->items = $this->itemService->getAll()->sortBy($this->sortBy);
+        $this->transactions = $this->itemTransactionService->getTransactions();
     }
 
     public function doSort($key)
