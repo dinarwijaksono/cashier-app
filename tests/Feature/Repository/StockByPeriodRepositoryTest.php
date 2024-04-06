@@ -13,40 +13,40 @@ use Tests\TestCase;
 class StockByPeriodRepositoryTest extends TestCase
 {
     public $stockByPeriodRepository;
+    public $item;
+    public $date;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->stockByPeriodRepository = App::make(StockByPeriodRepository::class);
+
+        $this->seed(ItemSeeder::class);
+        $this->item = Item::select('*')->first();
+        $this->date = mktime(0, 0, 0, 5, 11, 2024) * 1000;
     }
 
     public function test_addStock_success(): void
     {
-        $this->seed(ItemSeeder::class);
+        $this->stockByPeriodRepository->addStock($this->item->id, $this->date, 10);
 
-        $item = Item::select('*')->first();
-
-        $date = mktime(0, 0, 0, 5, 11, 2024) * 1000;
-
-        $this->stockByPeriodRepository->addStock($item->id, $date, 10);
-
-        $period = date('F-Y', $date / 1000);
+        $period = date('F-Y', $this->date / 1000);
 
         $this->assertDatabaseHas('stock_by_periods', [
-            'item_id' => $item->id,
+            'item_id' => $this->item->id,
             'period' => $period,
             'last_stock' => 10
         ]);
 
         $date = mktime(0, 0, 0, 5, 14, 2024) * 1000;
 
-        $this->stockByPeriodRepository->addStock($item->id, $date, 15);
+        $this->stockByPeriodRepository->addStock($this->item->id, $date, 15);
 
         $period = date('F-Y', $date / 1000);
 
         $this->assertDatabaseHas('stock_by_periods', [
-            'item_id' => $item->id,
+            'item_id' => $this->item->id,
             'period' => $period,
             'last_stock' => 25
         ]);
@@ -55,30 +55,24 @@ class StockByPeriodRepositoryTest extends TestCase
 
     public function test_add_stock_negative()
     {
-        $this->seed(ItemSeeder::class);
+        $this->stockByPeriodRepository->addStock($this->item->id, $this->date, 10);
 
-        $item = Item::select('*')->first();
-
-        $date = mktime(0, 0, 0, 5, 11, 2024) * 1000;
-
-        $this->stockByPeriodRepository->addStock($item->id, $date, 10);
-
-        $period = date('F-Y', $date / 1000);
+        $period = date('F-Y', $this->date / 1000);
 
         $this->assertDatabaseHas('stock_by_periods', [
-            'item_id' => $item->id,
+            'item_id' => $this->item->id,
             'period' => $period,
             'last_stock' => 10
         ]);
 
         $date = mktime(0, 0, 0, 5, 14, 2024) * 1000;
 
-        $this->stockByPeriodRepository->addStock($item->id, $date, -5);
+        $this->stockByPeriodRepository->addStock($this->item->id, $date, -5);
 
         $period = date('F-Y', $date / 1000);
 
         $this->assertDatabaseHas('stock_by_periods', [
-            'item_id' => $item->id,
+            'item_id' => $this->item->id,
             'period' => $period,
             'last_stock' => 5
         ]);
