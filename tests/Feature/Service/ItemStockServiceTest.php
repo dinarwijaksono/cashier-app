@@ -3,6 +3,7 @@
 namespace Tests\Feature\Service;
 
 use App\Models\Item;
+use App\Models\ItemTransaction;
 use App\Services\ItemStockService;
 use Database\Seeders\ItemSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -122,6 +123,57 @@ class ItemStockServiceTest extends TestCase
             'date' => $date,
             'type' => 'add_stock',
             'qty_in' => 10,
+            'qty_out' => 0,
+        ]);
+    }
+
+
+    public function test_delete_transaction()
+    {
+        $this->seed(ItemSeeder::class);
+
+        $item = Item::select('*')->first();
+        $date = mktime(1, 2, 3, 1, 12, 2004);
+        $date = $date * 1000;
+        $this->itemStockService->addition($item->id, $date, 13);
+
+        $transaction = ItemTransaction::select('*')->first();
+
+        $this->assertDatabaseHas('item_stocks', [
+            'item_id' => $item->id,
+            'stock' => 13,
+            'adjusment' => 0
+        ]);
+
+        $this->assertDatabaseHas('stock_by_periods', [
+            'item_id' => $item->id,
+            'last_stock' => 13
+        ]);
+
+        $this->assertDatabaseHas('item_transactions', [
+            'item_id' => $item->id,
+            'type' => 'add_stock',
+            'qty_in' => 13,
+            'qty_out' => 0,
+        ]);
+
+        $this->itemStockService->deleteTransaction($transaction->id);
+
+        $this->assertDatabaseMissing('item_stocks', [
+            'item_id' => $item->id,
+            'stock' => 13,
+            'adjusment' => 0
+        ]);
+
+        $this->assertDatabaseMissing('stock_by_periods', [
+            'item_id' => $item->id,
+            'last_stock' => 13
+        ]);
+
+        $this->assertDatabaseMissing('item_transactions', [
+            'item_id' => $item->id,
+            'type' => 'add_stock',
+            'qty_in' => 13,
             'qty_out' => 0,
         ]);
     }

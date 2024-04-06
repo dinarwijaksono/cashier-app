@@ -105,9 +105,12 @@ class ItemStockService
     public function getItemTransactions(string $code): Collection
     {
         try {
+            self::boot();
+
             $item = Item::select("id")->where('code', $code)->first();
 
             $itemTransactions = ItemTransaction::select(
+                'id',
                 'item_id',
                 'period_by_date',
                 'date',
@@ -128,6 +131,46 @@ class ItemStockService
             ]);
 
             return collect([]);
+        }
+    }
+
+
+    // delete 
+    public function deleteTransaction(int $transactionId): void
+    {
+        try {
+            self::boot();
+            DB::beginTransaction();
+
+            $itemTransaction = ItemTransaction::select(
+                'id',
+                'item_id',
+                'date',
+                'qty_in',
+            )->where('id', $transactionId)
+                ->first();
+
+            $value = $itemTransaction->qty_in * -1;
+
+            $this->itemStockRepository->addStock($itemTransaction->item_id, $value);
+
+            $this->stockByPeriodRepository->addStock(
+                $itemTransaction->item_id,
+                $itemTransaction->date,
+                $value
+            );
+
+            ItemTransaction::where('id', $itemTransaction->id)->delete();
+
+            Log::info('delete transaction success');
+            DB::commit();
+        } catch (\Throwable $th) {
+
+            Log::error('delete transaction failed', [
+                'message' => $th->getMessage()
+            ]);
+
+            DB::rollBack();
         }
     }
 }

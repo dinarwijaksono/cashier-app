@@ -17,7 +17,8 @@
                     <td class="text-center">{{ date('d F Y', $item->date / 1000) }}</td>
                     <td class="text-center">{{ number_format($item->qty_in, 2) }}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-danger btn-block">Batalkan</button>
+                        <button type="button" wire:click="doDeleteTransaction({{ $item->id }})"
+                            class="btn btn-sm btn-danger btn-block">Batalkan</button>
                     </td>
                 </tr>
             @endforeach
