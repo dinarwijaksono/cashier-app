@@ -135,7 +135,7 @@ class ItemStockService
     }
 
 
-    // delete 
+    // delete
     public function deleteTransaction(int $transactionId): void
     {
         try {
