@@ -1,88 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('../layout/main-layout')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <!-- Bootstrap 3.3.2 -->
-    <link href="/adminLTE/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <!-- Font Awesome Icons -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
-        type="text/css" />
-    <!-- Ionicons -->
-    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-    <!-- Theme style -->
-    <link href="/adminLTE/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
-    <link href="/adminLTE/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+@section('main-section')
+    <div class="content-wrapper">
 
-    @livewireStyles
+        <section class="content-header">
+            <h1>Dashboard</h1>
+            <ol class="breadcrumb">
+                <li class="active"><a href="/master-item">Dashboard</a></li>
+            </ol>
+        </section>
 
-    <title>{{ env('APP_NAME') }}</title>
-</head>
+        <section class="content">
 
-<body class="skin-green">
+            <div class="row">
 
-    <div class="wrapper">
+                <section class="col-sm-6">
+                    @livewire('sales-transaction.form-add-item');
+                </section>
 
-        <header class="main-header">
-            <!-- Logo -->
-            <a href="/" class="logo">Cashier<b>App</b></a>
-            <!-- Header Navbar: style can be found in header.less -->
-            <nav class="navbar navbar-static-top" role="navigation">
-                <!-- Sidebar toggle button-->
-                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                    <span class="sr-only">Toggle navigation</span>
-                </a>
-            </nav>
-        </header>
+                <section class="col-sm-6">
+                    <div class="box box-success">
+                        <div class="box-header">
+                            <h3 class="box-title">Daftar transaksi</h3>
+                        </div>
 
-        @livewire('components.sidebar')
+                        <div class="box-body">
 
-        <!-- Right side column. Contains the navbar and content of the page -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small>Control panel</small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ol>
-            </section>
+                            <p class="text-right">12:33 - 23 Maret 2024</p>
 
-            <!-- Main content -->
-            <section class="content">
+                            <table class="table table-bordered" aria-describedby="table-list">
+                                <tr>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">Deskripsi</th>
+                                    <th class="text-center">Satuan</th>
+                                    <th class="text-center">Harga</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center"></th>
+                                </tr>
 
+                                @for ($i = 0; $i < 3; $i++)
+                                    <tr>
+                                        <td class="text-center">{{ $i + 1 }}</td>
+                                        <td>Lorem ipsum dolor sit amet.</td>
+                                        <td class="text-center">2 kg</td>
+                                        <td class="text-right">10.000</td>
+                                        <td class="text-right">Rp 20.000</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger btn-block">Hapus</button>
+                                        </td>
+                                    </tr>
+                                @endfor
+                                <tr>
+                                    <td class="text-bold text-right" colspan="4">Total</td>
+                                    <td class="text-bold text-success text-right">Rp 100.000.000</td>
+                                </tr>
+                            </table>
+                        </div>
 
+                        <div class="box-footer">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <button class="btn btn-block btn-sm btn-danger">Batal</button>
+                                </div>
 
-            </section><!-- /.content -->
-        </div><!-- /.content-wrapper -->
-        <footer class="main-footer">
-            <div class="pull-right hidden-xs">
-                <b>Version</b> {{ env('APP_VERSION') }}
+                                <div class="col-sm-4"></div>
+
+                                <div class="col-sm-4">
+                                    <button class="btn btn-sm btn-block btn-success">Proses</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </div>
-            <strong>Cashier-app </strong>
-        </footer>
-    </div><!-- ./wrapper -->
 
-    <!-- jQuery 2.1.3 -->
-    <script src="/adminLTE/plugins/jQuery/jQuery-2.1.3.min.js"></script>
-    <!-- Bootstrap 3.3.2 JS -->
-    <script src="/adminLTE/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-    <!-- SlimScroll -->
-    <script src="/adminLTE/plugins/slimScroll/jquery.slimScroll.min.js" type="text/javascript"></script>
-    <!-- FastClick -->
-    <script src='/adminLTE/plugins/fastclick/fastclick.min.js'></script>
-    <!-- AdminLTE App -->
-    <script src="/adminLTE/dist/js/app.min.js" type="text/javascript"></script>
+        </section>
 
-    @livewireScripts
-</body>
-
-</html>
+    </div>
+@endsection
