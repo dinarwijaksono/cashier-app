@@ -2,6 +2,9 @@
 
 namespace App\Livewire\SalesTransaction;
 
+use App\Services\SalesTransactionService;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class BoxListTransaction extends Component
@@ -12,12 +15,15 @@ class BoxListTransaction extends Component
     {
         return [
             'add-item' => 'boot',
-            'cencel-transactions' => 'boot'
+            'change-transactions' => 'boot',
+
         ];
     }
 
     public function boot()
     {
+        Log::withContext(['class' => BoxListTransaction::class]);
+
         $this->transactions = collect([]);
 
         if (session()->has('transactions')) {
@@ -29,7 +35,25 @@ class BoxListTransaction extends Component
     {
         session()->forget('transactions');
 
-        $this->dispatch('cencel-transactions')->self();
+        $this->dispatch('change-transactions')->self();
+    }
+
+    public function doDeleteItem(string $code)
+    {
+        try {
+
+            $salesTransactionService = App::make(SalesTransactionService::class);
+
+            $salesTransactionService->deleteItem($code);
+
+            $this->dispatch('change-transactions')->self();
+
+            Log::info('do delete item success');
+        } catch (\Throwable $th) {
+            Log::error('do delete item failed', [
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     public function render()

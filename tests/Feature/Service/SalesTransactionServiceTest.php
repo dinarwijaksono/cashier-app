@@ -48,4 +48,26 @@ class SalesTransactionServiceTest extends TestCase
         $this->assertEquals($transaction->where('code', $this->item->code)->first()['qty'], 10);
         $this->assertEquals($transaction->where('code', $item->code)->first()['qty'], 4);
     }
+
+
+    public function test_delete_item_success()
+    {
+        $qty = 5;
+
+        $this->seed(ItemSeeder::class);
+        $this->seed(ItemSeeder::class);
+
+        $this->salesTransactionService->addItem($this->item->code, $qty);
+
+        $item = Item::select('*')->where('code', '!=', $this->item->code)->first();
+        $this->salesTransactionService->addItem($item->code, 4);
+
+        $transaction = collect(session()->get('transactions'));
+        $this->assertTrue($transaction->where('code', $item->code)->isNotEmpty());
+
+        $this->salesTransactionService->deleteItem($item->code);
+
+        $transaction = collect(session()->get('transactions'));
+        $this->assertTrue($transaction->where('code', $item->code)->isEmpty());
+    }
 }

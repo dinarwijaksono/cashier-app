@@ -29,7 +29,8 @@
                     <td class="text-right">{{ number_format($key['price']) }}</td>
                     <td class="text-right">{{ 'Rp ' . number_format($key['total']) }}</td>
                     <td>
-                        <button class="btn btn-sm btn-danger btn-block">Hapus</button>
+                        <button type="button" wire:click="doDeleteItem('{{ $key['code'] }}')"
+                            class="btn btn-sm btn-danger btn-block">Hapus</button>
                     </td>
                 </tr>
             @endforeach
