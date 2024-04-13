@@ -12,6 +12,8 @@
 
         <section class="content">
 
+            @livewire('components.alert-detail')
+
             <div class="row">
 
                 <section class="col-sm-6">

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\SalesTransaction;
 
+use App\Livewire\Components\AlertDetail;
 use App\Models\Item;
 use App\Services\ItemService;
 use App\Services\SalesTransactionService;
@@ -44,7 +45,13 @@ class FormAddItem extends Component
             $this->name = '';
             $this->qty = 1;
 
+            session()->put('alertDetailMessage', [
+                'message' => 'Item berhasil di tambahkan.',
+                'status' => 'success'
+            ]);
+
             $this->dispatch('add-item')->to(BoxListTransaction::class);
+            $this->dispatch('do-show-box')->to(AlertDetail::class);
 
             Log::info('do add item success');
         } catch (\Throwable $th) {

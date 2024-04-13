@@ -2,6 +2,7 @@
 
 namespace App\Livewire\SalesTransaction;
 
+use App\Livewire\Components\AlertDetail;
 use App\Services\SalesTransactionService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
@@ -35,7 +36,13 @@ class BoxListTransaction extends Component
     {
         session()->forget('transactions');
 
+        session()->put('alertDetailMessage', [
+            'message' => 'Transaksi berhasil di batalkan.',
+            'status' => 'warning'
+        ]);
+
         $this->dispatch('change-transactions')->self();
+        $this->dispatch('do-show-box')->to(AlertDetail::class);
     }
 
     public function doDeleteItem(string $code)
@@ -46,7 +53,13 @@ class BoxListTransaction extends Component
 
             $salesTransactionService->deleteItem($code);
 
+            session()->put('alertDetailMessage', [
+                'message' => 'Item berhasil di hapus.',
+                'status' => 'warning'
+            ]);
+
             $this->dispatch('change-transactions')->self();
+            $this->dispatch('do-show-box')->to(AlertDetail::class);
 
             Log::info('do delete item success');
         } catch (\Throwable $th) {
