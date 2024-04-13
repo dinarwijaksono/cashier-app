@@ -7,6 +7,7 @@ use App\Services\ItemService;
 use App\Services\SalesTransactionService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use App\Livewire\SalesTransaction\BoxListTransaction;
 use Livewire\Component;
 
 class FormAddItem extends Component
@@ -42,6 +43,8 @@ class FormAddItem extends Component
 
             $this->name = '';
             $this->qty = 1;
+
+            $this->dispatch('add-item')->to(BoxListTransaction::class);
 
             Log::info('do add item success');
         } catch (\Throwable $th) {
