@@ -10,7 +10,7 @@
             <input type="text" wire:model="name" list="item-list" class="form-control" id="name" autocomplete="off"
                 placeholder="Nama" autofocus>
             @error('name')
-                <p class="text-danger">Lorem ipsum, dolor sit amet consectetur adipisicing.</p>
+                <p class="text-danger">{{ $message }}</p>
             @enderror
         </div>
 
@@ -23,6 +23,9 @@
         <div class="form-group">
             <label for="qty">Qty</label>
             <input type="text" wire:model="qty" class="form-control" id="qty" placeholder="Qty">
+            @error('qty')
+                <p class="text-danger">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="row">

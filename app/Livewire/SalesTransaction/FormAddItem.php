@@ -33,9 +33,20 @@ class FormAddItem extends Component
         $this->items = $this->itemService->getAll();
     }
 
+    public function getRules()
+    {
+        return [
+            'name' => 'required',
+            'qty' => 'required|numeric|min:0.05'
+        ];
+    }
+
     public function doAddItem()
     {
+        $this->validate();
+
         try {
+
             $salesTransactionServiec = App::make(SalesTransactionService::class);
 
             $item = Item::select('price', 'unit', 'code')->where('name', $this->name)->first();
