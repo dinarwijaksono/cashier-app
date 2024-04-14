@@ -12,6 +12,8 @@ class BoxListTransaction extends Component
 {
     public $transactions;
 
+    protected $salesTransactionService;
+
     public function getListeners()
     {
         return [
@@ -24,6 +26,8 @@ class BoxListTransaction extends Component
     public function boot()
     {
         Log::withContext(['class' => BoxListTransaction::class]);
+
+        $this->salesTransactionService = App::make(SalesTransactionService::class);
 
         $this->transactions = collect([]);
 
@@ -49,9 +53,7 @@ class BoxListTransaction extends Component
     {
         try {
 
-            $salesTransactionService = App::make(SalesTransactionService::class);
-
-            $salesTransactionService->deleteItem($code);
+            $this->salesTransactionService->deleteItem($code);
 
             session()->put('alertDetailMessage', [
                 'message' => 'Item berhasil di hapus.',
@@ -64,6 +66,40 @@ class BoxListTransaction extends Component
             Log::info('do delete item success');
         } catch (\Throwable $th) {
             Log::error('do delete item failed', [
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function doProcess()
+    {
+        try {
+            if (!session()->has('transactions')) {
+
+                session()->put('alertDetailMessage', [
+                    'message' => 'Transaksi tidak bisa di proses, karena transaksi kosong.',
+                    'status' => 'danger'
+                ]);
+
+                $this->dispatch('do-show-box')->to(AlertDetail::class);
+                return;
+            }
+
+            $this->salesTransactionService->processTransaction(session()->get('transactions'));
+
+            $this->transactions = collect([]);
+
+            session()->put('alertDetailMessage', [
+                'message' => 'Transaksi berhasil di proses.',
+                'status' => 'success'
+            ]);
+
+            $this->dispatch('change-transactions')->self();
+            $this->dispatch('do-show-box')->to(AlertDetail::class);
+
+            Log::info('do process success');
+        } catch (\Throwable $th) {
+            Log::error('do process failed', [
                 'message' => $th->getMessage()
             ]);
         }

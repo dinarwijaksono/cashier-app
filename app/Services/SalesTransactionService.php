@@ -2,11 +2,31 @@
 
 namespace App\Services;
 
+use App\Models\DetailedReceipt;
+use App\Models\Item;
+use App\Models\Receipt;
+use App\Repository\ItemStockRepository;
+use App\Repository\ItemTransactionRepository;
+use App\Repository\StockByPeriodRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class SalesTransactionService
 {
+    public $itemStockRepository;
+    public $stockByPeriodRepository;
+    public $itemTransactionRepository;
+
+    public function __construct(
+        ItemStockRepository $itemStockRepository,
+        StockByPeriodRepository $stockByPeriodRepository,
+        ItemTransactionRepository $itemTransactionRepository
+    ) {
+        $this->itemStockRepository = $itemStockRepository;
+        $this->stockByPeriodRepository = $stockByPeriodRepository;
+        $this->itemTransactionRepository = $itemTransactionRepository;
+    }
+
     public function boot()
     {
         Log::withContext(['class' => SalesTransactionService::class]);
@@ -72,6 +92,69 @@ class SalesTransactionService
         }
     }
 
+    // update
+    public function processTransaction(array $transactions): void
+    {
+        try {
+            self::boot();
+            DB::beginTransaction();
+
+            $day = date('d', time());
+            $month = date('n', time());
+            $year = date('Y', time());
+            $periodByDate = mktime(0, 0, 0, $month, $day, $year);
+
+            $date = round(microtime(true) * 1000);
+
+            $id = DB::table('receipts')
+                ->insertGetId([
+                    'period_by_date' => $periodByDate,
+                    'date' => $date,
+                    'grand_total' => 0,
+                    'created_at' => round(microtime(true) * 1000),
+                    'updated_at' => round(microtime(true) * 1000),
+                ]);
+
+            $grandTotal = 0;
+            foreach ($transactions as $key) :
+
+                $grandTotal += $key['total'];
+
+                $item = Item::select('id')->where('code', $key['code'])->first();
+                $this->itemStockRepository->addStock($item->id, $key['qty'] * -1);
+
+                $this->stockByPeriodRepository->addStock($item->id, $date, $key['qty'] * -1);
+
+                $this->itemTransactionRepository->create($item->id, $date, 'receipt', $key['qty']);
+
+                DetailedReceipt::insert([
+                    'item_id' => $item->id,
+                    'receipt_id' => $id,
+                    'qty' => $key['qty'],
+                    'price' => $key['price'],
+                    'total' => $key['total'],
+                    'created_at' => round(microtime(true) * 1000),
+                    'updated_at' => round(microtime(true) * 1000),
+                ]);
+
+            endforeach;
+
+            Receipt::where('id', $id)->update([
+                'grand_total' => $grandTotal
+            ]);
+
+            session()->forget('transactions');
+
+            Log::info('process transactions success');
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            Log::error('process transactions failed', [
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
 
     // delete
     public function deleteItem(string $code): void

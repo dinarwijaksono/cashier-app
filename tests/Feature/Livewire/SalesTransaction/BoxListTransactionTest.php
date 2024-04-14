@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Livewire\SalesTransaction;
 
+use App\Livewire\Components\AlertDetail;
 use App\Livewire\SalesTransaction\BoxListTransaction;
 use App\Models\Item;
 use App\Services\SalesTransactionService;
@@ -48,6 +49,33 @@ class BoxListTransactionTest extends TestCase
             ->assertDontSee($this->item->name)
             ->assertDontSee(55)
             ->assertDontSee(number_format($this->item->price));
+    }
+
+    public function test_process_transaction_success()
+    {
+        $this->salesTransactionService->addItem($this->item->code, 55);
+
+        Livewire::test(BoxListTransaction::class)
+            ->call('doProcess')
+            ->assertDispatchedTo(AlertDetail::class, 'do-show-box');
+
+        $this->assertTrue(session()->has('alertDetailMessage'));
+        $this->assertEquals(session()->get('alertDetailMessage')['status'], 'success');
+        $this->assertEquals(session()->get('alertDetailMessage')['message'], 'Transaksi berhasil di proses.');
+    }
+
+    public function test_process_transaction_failed_item_is_empty()
+    {
+        Livewire::test(BoxListTransaction::class)
+            ->call('doProcess')
+            ->assertDispatchedTo(AlertDetail::class, 'do-show-box');
+
+        $this->assertTrue(session()->has('alertDetailMessage'));
+        $this->assertEquals(session()->get('alertDetailMessage')['status'], 'danger');
+        $this->assertEquals(
+            session()->get('alertDetailMessage')['message'],
+            'Transaksi tidak bisa di proses, karena transaksi kosong.'
+        );
     }
 
 

@@ -51,7 +51,7 @@
             <div class="col-sm-4"></div>
 
             <div class="col-sm-4">
-                <button class="btn btn-sm btn-block btn-success">Proses</button>
+                <button type="button" wire:click="doProcess" class="btn btn-sm btn-block btn-success">Proses</button>
             </div>
         </div>
     </div>
