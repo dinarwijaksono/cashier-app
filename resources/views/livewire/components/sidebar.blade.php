@@ -13,6 +13,12 @@
             </li>
 
             <li>
+                <a href="/receipt-history">
+                    <i class="fa fa-envelope"></i> <span>Transaksi Histori</span>
+                </a>
+            </li>
+
+            <li>
                 <a href="/master-item">
                     <i class="fa fa-envelope"></i> <span>Master Item</span>
                 </a>
